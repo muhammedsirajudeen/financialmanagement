@@ -91,7 +91,8 @@ fastify.post("/tokenchecker",async (request,reply)=>{
   }
 })
 
-
+//next we have to create and end point for adding expenses
+//for current date we just add expense 
 
 const start = async () => {
   try {

@@ -17,6 +17,15 @@ button.addEventListener("click",async ()=>{
     })).json()
     alert(response.message)
     if(response.message==="login approved"){
+        let data=await (await fetch(url+"/tokencreator",{
+            method:'POST',
+            headers:headers,
+            body:JSON.stringify({
+                username:email,
+                password:password
+            })
+        })).json()
+        window.localStorage.setItem("token",data.token)
         window.location.href="./home.html"
     }
 

@@ -12,6 +12,7 @@
     "@fastify/cors": "^8.4.0",
     "fastify": "^4.23.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.5.3"
+    "mongoose": "^7.5.3",
+    "yahoo-finance": "^0.3.8"
   }
 }
