@@ -39,5 +39,28 @@
         </div>
         
     </div>
+
+    <div class="expensecontainer">
+        <div class="expensesubcontainer">
+            <div class="expenseitemcontainer">
+                <div class="expensedate">Date</div>
+                <div class="expense">Amount</div>
+                <div class="expensetype">ExpenseType</div>
+            </div>
+            <div class="addexpensecontainer">
+                <input type="date" id="date" pattern="\d{4}-\d{2}-\d{2}">
+                <input type="number" placeholder="enter amount" id="expenseamount">
+                <select name="expensetype" id="expensetype">
+                    <option value="personal">personal</option>
+                    <option value="educational">educational</option>
+                    <option value="entertainment">entertainment</option>
+                    <option value="food">food</option>
+
+                </select>
+                <button class="addbutton">add</button>
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
