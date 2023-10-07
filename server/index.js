@@ -97,16 +97,32 @@ fastify.post("/tokenchecker",async (request,reply)=>{
 //for current date we just add expense 
 
 //getting all expense by date
-fastify.get("/getdailyexpense",async (request,reply)=>{
+fastify.post("/getdailyexpense",async (request,reply)=>{
+  const token=request.body.token
+  console.log(token)
   let date=new Date()
   let year=date.getFullYear()
-  let month=date.getMonth()
-  let day=date.getDay()
+  let month=date.getMonth()+1
+  let day=date.getDate()
+  //handling a simple exception
+  if((day.toString()).length){
+    day="0"+day.toString()
+    
+  }
   date=year+"-"+month+"-"+day
+  console.log(date)
   try{
-    let docs=await Expense.find()
-    console.log(docs)
-    return {message:"success",data:docs}
+    const decoded=jwt.verify(token,"secret123")
+    console.log(decoded.username,date)
+    let docs=await Expense.find({username:decoded.username,date:date})
+    //returning the expense array for the current date
+    if(docs.length!==0){
+      return {message:"success",data:docs[0].expensearray}
+
+    }else{
+      return {message:"success",data:[]}
+
+    }
 
   }catch(error){
     console.log(error)
@@ -157,6 +173,46 @@ fastify.post("/addexpense",async (request,reply)=>{
     return {message:"error"}
   }
 } )
+
+
+//adding code to delete individual expenses
+fastify.delete("/removedailyexp/:id",async (request,reply)=>{
+  const id=request.params.id
+  let date=new Date()
+  let year=date.getFullYear()
+  let month=date.getMonth()+1
+  let day=date.getDate()
+  if((day.toString()).length){
+    day="0"+day.toString()
+    
+  }
+  date=year+"-"+month+"-"+day
+  let token=request.headers.authorization
+  token=token.replace("Bearer ","")
+  try{
+    let decoded=jwt.verify(token,"secret123")
+    let docs=await Expense.findOne(
+      {
+        username:decoded.username,
+        date:date
+      }
+    )
+    let userid=docs._id.toHexString()
+    let expensearray=docs.expensearray
+    expensearray=expensearray.filter((value)=> value._id.toHexString()!==id )
+    console.log(expensearray)
+    await Expense.findByIdAndUpdate(userid,{
+      expensearray:expensearray
+    })
+    return {message:"success"}
+
+  }catch(error){
+    console.log(error)
+    return {message:"error"}
+
+  }
+  //access all doc with current username and current date
+})
 
 
 const start = async () => {

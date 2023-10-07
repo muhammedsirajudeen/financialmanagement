@@ -21,9 +21,41 @@ window.onload=async ()=>{
         }
 
         //retrieve and populate expense tab
-        let expensedatajson=await (await fetch(url+"/getdailyexpense")).json()
-        console.log(expensedatajson)
-        let expensedata=expensedatajson.data
+        
+        let expensedatajson=await (await fetch(url+"/getdailyexpense",{
+            method:'POST',
+            headers:headers,
+            body:JSON.stringify({
+                token:token
+            })
+        })).json()
+        let expensearray=expensedatajson.data
+        expensearray.forEach((value)=>{
+            let expenseitemcontainer=document.createElement("div")
+            expenseitemcontainer.className="expenseitemcontainer"
+            //adding expense amount 
+            let expense=document.createElement("div")
+            expense.className="expense"
+            expense.textContent=value.amount
+            expenseitemcontainer.appendChild(expense)
+            //adding expense type
+            let expensetype=document.createElement("div")
+            expensetype.className="expensetype"
+            expensetype.textContent=value.type
+            expenseitemcontainer.appendChild(expensetype)
+            //adding delete button
+            let expensedelete=document.createElement("button")
+            expensedelete.className="deletebutton"
+            expensedelete.textContent="delete"
+            expensedelete.id=value._id
+            expensedelete.addEventListener("click",deleteHandler)
+            expenseitemcontainer.appendChild(expensedelete)
+
+            //appending here
+            let expensemaincontainer=document.querySelector(".expensesubcontainer")
+            expensemaincontainer.appendChild(expenseitemcontainer)
+        })
+        
 
         
 
@@ -70,10 +102,11 @@ addexpensebutton.addEventListener("click",async ()=>{
     })).json()
     if(response.message==="success"){
         alert("successfully saved")
-        document.querySelector("#date").value=""
+        
         document.querySelector("#expensetype").value=""
+       
         document.querySelector("#expenseamount").value=""
-
+        window.location.reload()
     }else{
         alert("re-add the data")
 
@@ -81,3 +114,28 @@ addexpensebutton.addEventListener("click",async ()=>{
     console.log(response)
 
 })
+
+
+
+
+//function to handle the delete functionality
+async function deleteHandler(e){
+    let response=await fetch(url+"/removedailyexp/"+e.target.id,
+    {
+        method:'DELETE',
+        headers:{
+            Authorization:`Bearer ${window.localStorage.getItem("token")}`
+        }
+        
+    })
+    let responsejson=await response.json()
+    if(responsejson.message==="success"){
+        alert("successfully deleted")
+        window.location.reload()
+    }
+    else{
+        alert("please try again")
+    }
+    console.log(responsejson)
+
+}
