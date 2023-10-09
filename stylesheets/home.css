@@ -64,3 +64,25 @@
     display: flex;
     margin: 8%;
 }
+.investmentcontainer{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 100%;
+}
+
+.investmentsubcontainer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 80%;
+}
+.investmentlist{
+    display: flex;
+    justify-content: space-evenly;
+    width:50%;
+}
+.investmentaddcontainer{
+    display: flex;
+    
+}
