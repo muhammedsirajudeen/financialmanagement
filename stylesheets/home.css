@@ -84,17 +84,24 @@
 .investmentlist{
     display: flex;
     justify-content: space-evenly;
-    width:50%;
+    width:100%;
 }
 .investmentaddcontainer{
     display: flex;
     justify-content: space-evenly;
     margin: 5%;
-    width: 60%;
+    width: 100%;
     
     
     
 }
 .investmentquant{
     width: 10%;
+}
+
+.investaddlist{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    margin: 2%;
 }

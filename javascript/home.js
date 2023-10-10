@@ -56,6 +56,57 @@ window.onload=async ()=>{
             let expensemaincontainer=document.querySelector(".expensesubcontainer")
             expensemaincontainer.appendChild(expenseitemcontainer)
         })
+
+        let investmentjson=await (await fetch(url+"/getinvestments",{
+            method:'POST',
+            headers:headers,
+            body:JSON.stringify(
+                {
+                    token:token
+                }
+            )
+        })).json()
+        
+        
+        investmentjson.data.forEach((value)=>{
+            let investmentsubcontainer=document.createElement("div")
+            investmentsubcontainer.className="investaddlist"
+            let investdate=document.createElement("div")
+            investdate.className="investText"
+            investdate.textContent=value.date
+            investmentsubcontainer.appendChild(investdate)
+
+            let investname=document.createElement("div")
+            investname.className="investText"
+            investname.textContent=value.name
+            investmentsubcontainer.appendChild(investname)
+
+            let investamount=document.createElement("div")
+            investamount.className="investText"
+            investamount.textContent=value.amount
+            investmentsubcontainer.appendChild(investamount)
+
+            let investquantity=document.createElement("div")
+            investquantity.className="investText"
+            investquantity.textContent=value.quantity
+            investmentsubcontainer.appendChild(investquantity)
+
+            let investType=document.createElement("div")
+            investType.className="investText"
+            investType.textContent=value.type
+            investmentsubcontainer.appendChild(investType)
+
+            let investdelete=document.createElement("button")
+            investdelete.className="investdelete"
+            investdelete.textContent="delete"
+            investdelete.id=value._id
+            investmentsubcontainer.appendChild(investdelete)
+
+            investdelete.addEventListener("click",investdeleteHandler)
+
+            let investmaincontainer=document.querySelector(".investmentsubcontainer")
+            investmaincontainer.appendChild(investmentsubcontainer)
+        })
         
 
         
@@ -148,6 +199,7 @@ investaddbutton.addEventListener("click",async ()=>{
     let investamount=document.querySelector("#investmentamount").value
     let investqty=document.querySelector("#investmentquantity").value
     let investmentType=document.querySelector("#investmentType").value
+    let investname=document.querySelector("#investname").value
     console.log(investdate,investamount,investmentType)
     let response=await (await fetch(url+"/addinvest",{
         method:'POST',
@@ -158,6 +210,7 @@ investaddbutton.addEventListener("click",async ()=>{
                 investdata:
                 {
                     date:investdate,
+                    name:investname,
                     amount:investamount,
                     quantity:investqty,
                     type:investmentType
@@ -169,8 +222,28 @@ investaddbutton.addEventListener("click",async ()=>{
         alert("readd the data")
     }else{
         alert("successfully added")
+        window.location.reload()
     }
 
 })
+
+
+
+//function to handle delete for investments
+async function investdeleteHandler(e){
+    let response=await (await fetch(url+`/deleteinvestment/${e.target.id}`,{
+        method:'DELETE',
+        headers:{
+            Authorization:`Bearer ${window.localStorage.getItem("token")}`
+        }
+    })).json()
+    if(response.message==="success"){
+        alert("deleted")
+        window.location.reload()
+    }else{
+        alert("please redo the action")
+    }
+
+}
 
 

@@ -173,7 +173,7 @@ fastify.delete("/removedailyexp/:id",async (request,reply)=>{
   let year=date.getFullYear()
   let month=date.getMonth()+1
   let day=date.getDate()
-  if((day.toString()).length){
+  if((day.toString()).length===1){
     day="0"+day.toString()
     
   }
@@ -198,7 +198,7 @@ fastify.delete("/removedailyexp/:id",async (request,reply)=>{
     return {message:"success"}
 
   }catch(error){
-    
+    console.log(error)
     return {message:"error"}
 
   }
@@ -226,6 +226,49 @@ fastify.post("/addinvest",async (request,reply)=>{
       return {message:"success"}
     }
   }catch(error){
+    return {message:"error"}
+
+  }
+})
+
+//end point to get investments
+fastify.post("/getinvestments", async (request,reply)=>{
+  let token=request.body.token
+  try{
+    let decoded=jwt.verify(token,secretKey)
+    let doc=await Invest.findOne({username:decoded.username})
+    console.log(doc)
+    if(doc){
+      return {message:"success",data:doc.investarray}
+
+    }else{
+      return {message:"success",data:[]}
+
+    }
+  }catch(error){
+    console.log(error)
+    return {message:"error"}
+  }
+
+})
+
+//end point to delete investments
+fastify.delete("/deleteinvestment/:id",async (request,reply)=>{
+  let token=request.headers.authorization
+  let id=request.params.id
+  token=token.replace("Bearer ","")
+  try{
+    let decoded=jwt.verify(token,secretKey)
+    let docs=await Invest.findOne({username:decoded.username})
+    docs.investarray=docs.investarray.filter((value)=> value._id.toHexString() !== id )
+    await Invest.findByIdAndUpdate(
+      docs._id.toHexString(),{
+        investarray:docs.investarray
+      }
+    )
+    return {message:"success",data:docs.investarray}
+  }catch(error){
+    console.log(error)
     return {message:"error"}
 
   }

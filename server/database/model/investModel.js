@@ -4,6 +4,7 @@ let Invest;
 const investarraySchema=mongoose.Schema(
     {
         date:String,
+        name:String,
         amount:Number,
         quantity:Number,
         type:String,
