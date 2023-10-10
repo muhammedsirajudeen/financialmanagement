@@ -30,6 +30,7 @@ window.onload=async ()=>{
             })
         })).json()
         let expensearray=expensedatajson.data
+        console.log(expensearray)
         expensearray.forEach((value)=>{
             let expenseitemcontainer=document.createElement("div")
             expenseitemcontainer.className="expenseitemcontainer"
@@ -139,3 +140,37 @@ async function deleteHandler(e){
     console.log(responsejson)
 
 }
+
+//adding investment here
+let investaddbutton=document.querySelector("#addinvestment")
+investaddbutton.addEventListener("click",async ()=>{
+    let investdate=document.querySelector("#investmentdate").value
+    let investamount=document.querySelector("#investmentamount").value
+    let investqty=document.querySelector("#investmentquantity").value
+    let investmentType=document.querySelector("#investmentType").value
+    console.log(investdate,investamount,investmentType)
+    let response=await (await fetch(url+"/addinvest",{
+        method:'POST',
+        headers:headers,
+        body:JSON.stringify(
+            {
+                token:window.localStorage.getItem("token"),
+                investdata:
+                {
+                    date:investdate,
+                    amount:investamount,
+                    quantity:investqty,
+                    type:investmentType
+                }
+            }
+        )
+    })) .json()
+    if(response.message!=="success"){
+        alert("readd the data")
+    }else{
+        alert("successfully added")
+    }
+
+})
+
+

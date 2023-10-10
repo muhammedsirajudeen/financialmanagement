@@ -76,6 +76,10 @@
     align-items: center;
     flex-direction: column;
     width: 80%;
+    margin: 5%;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
 }
 .investmentlist{
     display: flex;
@@ -84,5 +88,13 @@
 }
 .investmentaddcontainer{
     display: flex;
+    justify-content: space-evenly;
+    margin: 5%;
+    width: 60%;
     
+    
+    
+}
+.investmentquant{
+    width: 10%;
 }
