@@ -1,11 +1,15 @@
 //external imports
 const cors=require("@fastify/cors")
 const jwt=require("jsonwebtoken")
-//user defined imports
+//user defined imports models here
 const dbConnect=require("./database/dbConnect")
 const User=require("./database/model/userModel")()
 const Expense=require("./database/model/expenseModel")()
 const Invest=require("./database/model/investModel")()
+
+//helper functions
+const {getPipeline_sum_avg ,getPipeline_type_sum_avg}= require("./helperFunctions/pipeline")
+
 //to handle cross origin requests
 const fastify = require('fastify')({
   logger: true
@@ -273,6 +277,46 @@ fastify.delete("/deleteinvestment/:id",async (request,reply)=>{
 
   }
 })
+
+ 
+/*
+end point to get sum  
+
+db.expenses.aggregate([
+   { $match :{ username:"muhammedsirajudeen29@gmail.com"}} , 
+   { $unwind:"$expensearray" },  
+   { $group : { _id:"$date",totalAmount: {$sum :"$expensearray.amount" } , dailyaverage: {$avg : "$expensearray.amount"}  } } ,
+   { $sort : { _id:1 } }  
+  
+  ])
+
+add this specific query to get individual dates total amount and that days average spend
+ 
+NEXT TASK: now we also need to get each types total amount for the date its average too and the maximum and minimum spend
+
+
+
+*/
+
+fastify.post("/getexpensesummary", async (request,reply)=>{
+  const token=request.body.token
+  try{
+    let decoded=jwt.verify(token,secretKey)
+    if(decoded){
+      const aggregate_sum_avg=await Expense.aggregate(getPipeline_sum_avg(decoded.username))
+      console.log(aggregate_sum_avg)
+      //here we are aggregating for sum and average
+      const aggregate_type_sum_avg=await Expense.aggregate(getPipeline_type_sum_avg(decoded.username))
+      console.log(aggregate_type_sum_avg)
+      return {message:"success", data: [aggregate_sum_avg,aggregate_type_sum_avg] }
+    }
+  }catch(error){
+    console.log(error)
+    return {message:"error occured"}
+  }
+  
+} )
+
 
 const start = async () => {
   try {
