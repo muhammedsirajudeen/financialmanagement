@@ -8,8 +8,12 @@ const Expense=require("./database/model/expenseModel")()
 const Invest=require("./database/model/investModel")()
 
 //helper functions
-const {getPipeline_sum_avg ,getPipeline_type_sum_avg}= require("./helperFunctions/pipeline")
-
+const {getPipeline_sum_avg ,
+  getPipeline_type_sum_avg ,
+  getPipeline_max,
+  getPipeline_maxType
+}= require("./helperFunctions/pipeline")
+const asyncmaxFunction=require("./helperFunctions/asyncmaxFetcher")
 //to handle cross origin requests
 const fastify = require('fastify')({
   logger: true
@@ -304,11 +308,25 @@ fastify.post("/getexpensesummary", async (request,reply)=>{
     let decoded=jwt.verify(token,secretKey)
     if(decoded){
       const aggregate_sum_avg=await Expense.aggregate(getPipeline_sum_avg(decoded.username))
-      console.log(aggregate_sum_avg)
       //here we are aggregating for sum and average
       const aggregate_type_sum_avg=await Expense.aggregate(getPipeline_type_sum_avg(decoded.username))
-      console.log(aggregate_type_sum_avg)
-      return {message:"success", data: [aggregate_sum_avg,aggregate_type_sum_avg] }
+      //getting max in each type
+
+      /* 
+        currently there is an error in this part 
+        OBJECTIVE :find the type of maximum spending of each day
+      */
+      const aggregate_max=await Expense.aggregate(getPipeline_max(decoded.username))
+      try{
+        let aggregate_maxType=await asyncmaxFunction(decoded.username,aggregate_max)
+        return {message:"success", data: [aggregate_sum_avg,aggregate_type_sum_avg,aggregate_maxType] }
+      }catch(error){
+        console.log(error)
+        return {message:"error occured"}
+      }
+
+
+    
     }
   }catch(error){
     console.log(error)
