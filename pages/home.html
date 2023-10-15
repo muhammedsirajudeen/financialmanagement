@@ -10,7 +10,6 @@
 <body>
     <div class="navigationcontainer">
         <a href="./home.html" class="navitem">home</a>
-        <a href="./investments.html" class="navitem">investments</a>
         <a href="./summary.html" class="navitem">summary</a>
         <div class="username"></div>
         <button class="signout">signout</button>
@@ -38,8 +37,10 @@
         </div>
         
     </div>
+    <h2>ADD EXPENSE</h2>
 
     <div class="expensecontainer">
+
         <div class="expensesubcontainer">
             <div class="expenseitemcontainer">
                 <div class="expensedate">Date</div>
@@ -63,6 +64,7 @@
     
 
     <!--in a similiar way we have to add investment container to understand current investments-->
+    <h2>ADD INVESTMENT</h2>
     <div class="investmentcontainer">
         <div class="investmentsubcontainer">
             <div class="investmentlist">
@@ -75,7 +77,7 @@
             <div class="investmentaddcontainer">
                 <!-- add investment container here-->
                 <input type="date" id="investmentdate" pattern="\d{4}-\d{2}-\d{2}">
-                <input type="text" class="investname" id="investname" >
+                <input type="text" class="investname" id="investname" placeholder="name">
 
                 <input type="number" class="investmentquant" id="investmentamount" placeholder="enter $">
                 <input type="number" class="investmentquant" id="investmentquantity" placeholder="enter qty">
