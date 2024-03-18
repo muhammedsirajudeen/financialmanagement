@@ -1,0 +1,37 @@
+.navigationcontainer {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    font-family: sans-serif;
+    font-weight: 500;
+}
+  a{
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  body{
+    margin: 0px;
+  }
+  
+  .returncontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .returnsubcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .greentext{
+    color: green;
+  }
+  .redtext{
+    color: red;
+  }

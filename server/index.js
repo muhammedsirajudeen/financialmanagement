@@ -114,10 +114,15 @@ fastify.post("/getdailyexpense",async (request,reply)=>{
     day="0"+day.toString()
     
   }
+  if((month.toString()).length===1){
+    month="0"+month.toString()
+    
+  }
   date=year+"-"+month+"-"+day
   try{
     const decoded=jwt.verify(token,secretKey)
     let docs=await Expense.find({username:decoded.username,date:date})
+    console.log(docs)
     //returning the expense array for the current date
     if(docs.length!==0){
       return {message:"success",data:docs[0].expensearray}
@@ -335,6 +340,29 @@ fastify.post("/getexpensesummary", async (request,reply)=>{
   
 } )
 
+fastify.post('/getallexpense',async (request,reply)=>{
+  console.log(request.body)
+  let token=request.body.token
+  let decoded=jwt.verify(token,secretKey)
+
+  let allexpenses=await Expense.find({username:decoded.username})
+  console.log(allexpenses)
+  return {message:"success",expense:allexpenses}
+})
+
+
+//getting live data of investments
+fastify.post('/getallinvestments',async (request,reply)=>{
+  console.log(request.body)
+  let token=request.body.token
+  let decoded=jwt.verify(token,secretKey)
+  let allinvestments=await Invest.find({username:decoded.username})
+  console.log(allinvestments)
+
+  return {message:"success",investments:allinvestments}
+
+})
+
 
 const start = async () => {
   try {
@@ -344,4 +372,5 @@ const start = async () => {
     process.exit(1)
   }
 }
+
 start()
