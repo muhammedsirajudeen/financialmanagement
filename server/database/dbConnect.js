@@ -1,7 +1,7 @@
 const mongoose=require("mongoose")
 async function dbConnect(){
     try{
-        await mongoose.connect("mongodb+srv://vava:vava@cluster0.vuxyl3c.mongodb.net/financialmanagement")
+        await mongoose.connect(process.env.MONGODB)
         console.log("connected to database")
     }catch(error){
         console.log(error)
